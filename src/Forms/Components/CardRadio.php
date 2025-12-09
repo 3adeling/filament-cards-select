@@ -10,6 +10,7 @@ use Filament\Schemas\Components\StateCasts\BooleanStateCast;
 use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Schemas\Components\StateCasts\OptionsArrayStateCast;
 use Filament\Schemas\Components\StateCasts\OptionStateCast;
+use Filament\Schemas\Concerns\HasColumns;
 
 class CardRadio extends Field implements Contracts\CanDisableOptions, Contracts\HasNestedRecursiveValidationRules
 {
@@ -21,11 +22,33 @@ class CardRadio extends Field implements Contracts\CanDisableOptions, Contracts\
     use Concerns\HasGridDirection;
     use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
+    use HasColumns {
+        columns as baseColumns;
+    }
 
     /**
      * @var view-string
      */
     protected string $view = 'filament-cards-select::forms.components.card-radio';
+
+    /**
+     * Set the number of columns for the grid layout.
+     * When an integer is passed, it applies to all breakpoints (sets as default).
+     *
+     * @param  array<string, int | Closure | null> | int | Closure | null  $columns
+     */
+    public function columns(array|int|Closure|null $columns = 2): static
+    {
+        if (is_int($columns)) {
+            $this->columns = [
+                'default' => $columns,
+            ];
+
+            return $this;
+        }
+
+        return $this->baseColumns($columns);
+    }
 
     protected bool|Closure $isInline = false;
 

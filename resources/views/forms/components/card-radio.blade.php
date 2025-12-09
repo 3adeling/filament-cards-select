@@ -1,6 +1,5 @@
 @php
     use Filament\Support\Enums\GridDirection;
-    use Illuminate\View\ComponentAttributeBag;
 
     $fieldWrapperView = $getFieldWrapperView();
     $extraInputAttributeBag = $getExtraInputAttributeBag();
@@ -11,22 +10,98 @@
     $isMultiple = $isMultiple();
     $statePath = $getStatePath();
     $wireModelAttribute = $applyStateBindingModifiers('wire:model');
+
+    $columns = $getColumns();
+
+    // Handle both integer and array column configurations
+    if (is_int($columns)) {
+        $defaultCols = $columns;
+        $smCols = null;
+        $mdCols = null;
+        $lgCols = null;
+        $xlCols = null;
+        $xxlCols = null;
+    } else {
+        $defaultCols = $columns['default'] ?? 1;
+        $smCols = $columns['sm'] ?? null;
+        $mdCols = $columns['md'] ?? null;
+        $lgCols = $columns['lg'] ?? null;
+        $xlCols = $columns['xl'] ?? null;
+        $xxlCols = $columns['2xl'] ?? null;
+    }
 @endphp
 
 <x-dynamic-component :component="$fieldWrapperView" :field="$field">
     <div
-        {{
-            $getExtraAttributeBag()
-                ->class([
-                    'fi-fo-card-radio grid grid-cols-1 gap-4',
-                    'sm:grid-cols-2' => ($cols = $getColumns()) === 2,
-                    'sm:grid-cols-3' => $cols === 3 || $cols === null,
-                    'sm:grid-cols-4' => $cols === 4,
-                    'sm:grid-cols-5' => $cols === 5,
-                    'sm:grid-cols-6' => $cols === 6,
-                    'fi-inline flex flex-wrap' => $isInline,
-                ])
-        }}
+        @if ($isInline)
+            {{
+                $getExtraAttributeBag()
+                    ->class([
+                        'fi-fo-card-radio fi-inline flex flex-wrap gap-4',
+                    ])
+            }}
+        @else
+            {{
+                $getExtraAttributeBag()
+                    ->class([
+                        'fi-fo-card-radio grid gap-4',
+                        match ($defaultCols) {
+                            1 => 'grid-cols-1',
+                            2 => 'grid-cols-2',
+                            3 => 'grid-cols-3',
+                            4 => 'grid-cols-4',
+                            5 => 'grid-cols-5',
+                            6 => 'grid-cols-6',
+                            default => 'grid-cols-1',
+                        },
+                        match ($smCols) {
+                            1 => 'sm:grid-cols-1',
+                            2 => 'sm:grid-cols-2',
+                            3 => 'sm:grid-cols-3',
+                            4 => 'sm:grid-cols-4',
+                            5 => 'sm:grid-cols-5',
+                            6 => 'sm:grid-cols-6',
+                            default => null,
+                        },
+                        match ($mdCols) {
+                            1 => 'md:grid-cols-1',
+                            2 => 'md:grid-cols-2',
+                            3 => 'md:grid-cols-3',
+                            4 => 'md:grid-cols-4',
+                            5 => 'md:grid-cols-5',
+                            6 => 'md:grid-cols-6',
+                            default => null,
+                        },
+                        match ($lgCols) {
+                            1 => 'lg:grid-cols-1',
+                            2 => 'lg:grid-cols-2',
+                            3 => 'lg:grid-cols-3',
+                            4 => 'lg:grid-cols-4',
+                            5 => 'lg:grid-cols-5',
+                            6 => 'lg:grid-cols-6',
+                            default => null,
+                        },
+                        match ($xlCols) {
+                            1 => 'xl:grid-cols-1',
+                            2 => 'xl:grid-cols-2',
+                            3 => 'xl:grid-cols-3',
+                            4 => 'xl:grid-cols-4',
+                            5 => 'xl:grid-cols-5',
+                            6 => 'xl:grid-cols-6',
+                            default => null,
+                        },
+                        match ($xxlCols) {
+                            1 => '2xl:grid-cols-1',
+                            2 => '2xl:grid-cols-2',
+                            3 => '2xl:grid-cols-3',
+                            4 => '2xl:grid-cols-4',
+                            5 => '2xl:grid-cols-5',
+                            6 => '2xl:grid-cols-6',
+                            default => null,
+                        },
+                    ])
+            }}
+        @endif
     >
         @foreach ($getOptions() as $value => $label)
             @php
