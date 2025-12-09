@@ -1,0 +1,30 @@
+{
+    "name": "adelali/filament-cards-select",
+    "description": "Card-style radio and checkbox list components for Filament",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Adelali\\FilamentCardsSelect\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adel Ali",
+            "email": "3adeling@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.2",
+        "filament/forms": "^4.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Adelali\\FilamentCardsSelect\\FilamentCardsSelectServiceProvider"
+            ]
+        }
+    }
+}
